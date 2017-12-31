@@ -1,0 +1,20 @@
+
+
+FILE=$(basename "$1")
+DIR=$(dirname "$1")
+STEM=${FILE%.lossy.flac}
+IN_LWCDF=$DIR/$STEM.lwcdf.flac
+OUT_LOSSY=$STEM.lossy.wav
+OUT_LWCDF=$STEM.lwcdf.wav
+OUT_DIR_AND_PID=/tmp/$$±
+OUT_WAV=$OUT_DIR_AND_PID$STEM.wav
+FLAC=/opt/local/bin/flac
+
+$FLAC -d -f --totally-silent --keep-foreign-metadata -o "$OUT_DIR_AND_PID$OUT_LOSSY" "$1" &
+$FLAC -d -f --totally-silent --keep-foreign-metadata -o "$OUT_DIR_AND_PID$OUT_LWCDF" "$IN_LWCDF" &
+wait
+/usr/local/bin/lossywav "$OUT_DIR_AND_PID$OUT_LOSSY" -M -S -f -o /tmp
+/bin/mv -f "$OUT_WAV" "$2$STEM.wav"
+/bin/rm -f "$OUT_DIR_AND_PID$OUT_LOSSY" "$OUT_DIR_AND_PID$OUT_LWCDF" "$OUT_WAV"
+
+

@@ -1,0 +1,1 @@
+/opt/local/bin/flac -dfc --totally-silent "$1" | /usr/local/bin/sox -t wav - -t s16 -c2 -r44100 -B - > "$2" 
